@@ -1,0 +1,4 @@
+#compdef smithctl
+
+_description files expl 'smith commands'
+_arguments "1: :(acl agents commands dump firehose group kill list logger metadata ping pop push rm start status stop version)"

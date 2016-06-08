@@ -1,0 +1,7 @@
+# Ruby stuff
+
+RUBYOPT=rubygems
+
+export RUBYOPT
+
+# vim:ft=zsh

@@ -1,0 +1,29 @@
+[color]
+  branch = auto
+  diff = auto
+  status = auto
+  ui = auto
+
+[alias]
+  a    = add
+  ap   = add --patch
+  c    = commit
+  ca   = commit --amend --reuse-message HEAD
+  dd   = diff
+  ddi  = diff --cached
+  dds  = diff --stat
+  ds   = !sh -c 'git diff stash@{${1:-0}}~1..stash@{${1:-0}}' -
+  st   = status
+  stu  = status --untracked-files=no
+  co   = checkout
+  root = !pwd
+  ll   = log
+  ls   = log --graph --pretty=format:'%C(yellow)%h%Creset%C(cyan)%d%Creset %s %Cgreen(%cr)%Creset %C(white)<%aN>%Creset'
+  lsa  = log --graph --pretty=format:'%C(yellow)%h%Creset%C(cyan)%d%Creset %s %Cgreen(%cr)%Creset %C(white)<%aN>%Creset' --all
+  pr    = reflog --pretty=format:'%C(yellow)%h%Creset%C(cyan)%Creset %gd %gs %Cgreen(%cr)%Creset %C(white)%Creset'
+
+[diff]
+  algorithm = patience
+
+[pull]
+  rebase = true

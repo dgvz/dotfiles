@@ -1,0 +1,100 @@
+function source_if_exists { [ -f $1 ] && source $1 }
+function short_hostname { hostname -s }
+
+function current_db {
+  if [ ! -z $git_root ] && [ -f $git_root/config/database.yml ]; then
+    awk '/'${RAILS_ENV-development}'/,/^$|\n|^[a-z]/{print $0};' $git_root/config/database.yml | awk '/database:/{print $2}'
+  fi
+}
+
+function gem-root { ruby -rrbconfig -e "RbConfig::CONFIG.tap {|c| \"#{c['MAJOR']}.#{c['MINOR']}.#{c['TEENY']}\".tap {|v| puts \"#{c['libdir']}/ruby/gems/#{v}\" } }" }
+
+function to {
+  case "$1" in
+    -a)
+      [[ -d $HOME/.to ]] || mkdir $HOME/.to
+      dir=$(readlink -e $2)
+      [ -z $dir ] && echo "No such file or directory" || ln -t $HOME/.to -s $dir
+      ;;
+    -l)
+      for i in ~/.to/*(@); do
+        printf "%-12s %s\n" "${i:t}:" $(readlink -e $i)
+      done
+      ;;
+    -p)
+      readlink -e ~/.to/$2
+      ;;
+    -d)
+      rm ~/.to/$2 2> /dev/null || echo "No such bookmark"
+      ;;
+    -*)
+      print "Unknown option"
+      ;;
+    '')
+      echo "usage: OPTIONS [bookmark]"
+      echo "  -a Add a new bookmark."
+      echo "  -d Delete a bookmark."
+      echo "  -l List all bookmarks."
+      echo "  -p Print the bookmark path."
+      ;;
+    *)
+      cd $(readlink -e ~/.to/$1)
+      ;;
+  esac
+}
+
+function cdd { cd ~/dev/ruby/$1 }
+function cdg { cd $(gem-root)/gems/$1 }
+
+function gr {
+  local git_root
+  git_root=$(git rev-parse --git-dir 2> /dev/null)
+  if [ ! -z $git_root ]; then
+    readlink -f $(dirname $git_root)
+  else
+    false
+  fi
+}
+
+function cr { cd $(gr || echo '.')/$1 }
+
+function bitly { $(whence -p bitly) -l filterfish -k R_3c48c14783d79679341ede80ae4aeee8 $@ }
+function dict  { \dictl "$@" 2>&1 | colorit | less -R }
+
+function mpc { /usr/bin/mpc -f "[[[%artist%/]%album% - ]]%title%]|[%file%]" $@ }
+
+
+function env { /usr/bin/env | sort }
+function setTitle { echo -n "]2;$1^G" }
+
+# today's date formatted in ISO standard.  If an argument is passed then
+# it is treated as a day and added or subtracted to the date.
+# See http://www.walkernews.net/2007/06/03/date-arithmetic-in-linux-shell-scripts/
+function today {
+  format='%Y%m%d'
+  [ -z $1 ] && date +$format || date -d "$[$1 * -1] day ago" +$format
+}
+
+function now { date $1 +%Y%m%dT%H%M%S }
+
+function gemdoc {
+  [ -z $1 ] && { echo "Please supply a gem"; return; }
+  gem_dir=`gem env gemdir`
+  luakit $gem_dir/doc/`$(whence ls) $gem_dir/doc | grep $1 | sort | tail -1`/rdoc/index.html
+}
+
+function title {
+  case "$TERM" in
+    screen*)
+      print -Pn "\033k\033\134\033k$1\033\134"
+      ;;
+    xterm*)
+      print -Pn "\e]0;%n@%m: $*\a"
+      ;;
+  esac
+}
+
+function uriencode { echo $1 | ruby -rcgi -e "puts CGI.escape(\"$*\")"}
+function uridecode { echo $1 | ruby -rcgi -e "puts CGI.unescape(\"$*\")" }
+
+# vim:ft=zsh

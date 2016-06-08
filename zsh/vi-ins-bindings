@@ -1,0 +1,5 @@
+KEYTIMEOUT=1
+
+bindkey -v
+
+# vim:ft=zsh

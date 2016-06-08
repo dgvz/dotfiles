@@ -1,0 +1,30 @@
+function reload-history { fc -R; zle accept-line }
+
+zle -N reload-history
+
+autoload -Uz edit-command-line
+zle -N edit-command-line
+bindkey -M vicmd v edit-command-line
+
+#bindkey -M isearch "^M" accept-search
+
+bindkey -M vicmd " " vi-find-next-char
+
+bindkey -M vicmd "^t" transpose-chars
+bindkey -M vicmd "u"  undo
+bindkey -M vicmd "^r" reload-history
+
+bindkey -M viins "^t" transpose-chars
+
+bindkey -M viins "^u" backward-kill-line
+bindkey -M viins "^w" backward-kill-word
+bindkey -M viins "^h" backward-delete-char
+bindkey -M viins "^?" backward-delete-char
+
+bindkey -M viins "^f" push-line
+bindkey -M vicmd "^f" push-line
+
+bindkey -M viins "^l" clear-screen
+bindkey -M viins '^i' expand-or-complete-prefix
+
+# vim:ft=zsh

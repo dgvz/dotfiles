@@ -1,0 +1,21 @@
+case "$TERM" in
+  xterm)
+    if [ -z "$XTERM_VERSION" ] ; then
+      echo "Warning: Terminal wrongly calling itself 'xterm'."
+    else
+      if test $(echo $XTERM_VERSION | sed 's/XTerm(\(.*\))/\1/') -gt 270; then
+        TERM=xterm-256color
+      else
+        case "$XTERM_VERSION" in
+          "XTerm") ;;
+          *) echo "Warning: Unrecognized XTERM_VERSION: $XTERM_VERSION" ;;
+        esac
+      fi
+    fi
+    ;;
+  screen)
+    TERM=screen-256color
+    ;;
+esac
+
+# vim:ft=zsh
