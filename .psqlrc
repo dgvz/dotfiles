@@ -24,4 +24,6 @@
 -- usage: :ptables;
 \set ptables 'select table_name from information_schema.tables where table_schema = ''public'''
 
+\set indexsize 'select nspname as namespace, relname as relation, pg_size_pretty(pg_relation_size(indrelid)) as table_size, pg_size_pretty(pg_relation_size(indexrelid)) as index_size, round(100 * pg_relation_size(indexrelid) / pg_relation_size(indrelid)) / 1000 as index_ratio from pg_index I left join pg_class C on (C.oid = I.indexrelid) left join pg_namespace N on (N.oid = C.relnamespace) where nspname not in (''pg_catalog'', ''information_schema'', ''pg_toast'') and C.relkind = ''i'' and pg_relation_size(indrelid) > 0 order by pg_relation_size(indexrelid) desc'
+
 -- vim: ft=sql
