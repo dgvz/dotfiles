@@ -16,7 +16,5 @@ if [ "$PS1" ] ; then
     source_if_exists $dotfiles/zsh/colemak
     source_if_exists $dotfiles/zsh/vi-cmd-bindings
     source_if_exists $dotfiles/zsh/incremental-search
-  else
-    source_if_exists $dotfiles/zsh/vi-ins-bindings
   fi
 fi
